@@ -1,58 +1,83 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Dimensions, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Dimensions,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert
+} from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
-import Constants from 'expo-constants'
 
-export default function AddMarkScren({}) {
-  //const { id } = route.params
-  const [latitude, setLatitude] = useState(0)
-  const [longitude, setLongitude] = useState(0)
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
+export default function MapScreen({ navigation }) {
+  const [myLatitude, setMyLatitude] = useState(0)
+  const [myLongitude, setMyLongitude] = useState(0)
+  const [myTitle, setMyTitle] = useState('')
+  const [myDescription, setMyDescription] = useState('')
 
   const [markers, setMarkers] = useState([])
-
-  async function adicionar() {
-    const json = {
-      title,
-      description
-    }
-
-    const headerOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(json) //Recebe em formato json, mas converte p str
-    }
-    //   const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOptions)
-  }
+  const token = 'vv7oTsHdw0X9g5e7QbniP58j3iJY4h6AoOSxMIw2X8xjokSHjF'
 
   useEffect(() => {
     async function getData() {
-      const token = 'vv7oTsHdw0X9g5e7QbniP58j3iJY4h6AoOSxMIw2X8xjokSHjF'
-      const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', {
+      const headerOption = {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
+      }
+
+      const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOption)
       const markers = await response.json()
-      setMarkers(markers)
       //console.log(markers)
+      setMarkers(markers)
     }
     getData()
   }, [])
 
+  const headerOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      latitude: myLatitude,
+      longitude: myLongitude,
+      title: myTitle,
+      description: myDescription
+    })
+  }
+
+  async function adicionar() {
+    //const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOption)
+    const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOptions)
+    // Qdo a resposta é 200 a solicitação foi atendida c sucesso
+    // Se status for 401 não foi possivel ACESSAR API UFRN
+    if (response.status === 200) {
+      Alert.alert('Marcador inserido com sucesso.')
+    } else {
+      Alert.alert('Erro: ' + response.status)
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.mapTouch} onPress={() => {}}>
+      <ScrollView style={styles.mapTouch} onPress={() => {}}>
         <MapView
           style={styles.map}
           onPress={event => {
-            setLatitude(event.nativeEvent.coordinate.latitude)
-            setLongitude(event.nativeEvent.coordinate.longitude)
+            setMyLatitude(event.nativeEvent.coordinate.latitude)
+            setMyLongitude(event.nativeEvent.coordinate.longitude)
           }}
         >
+          <Marker
+            coordinate={{ latitude: myLatitude, longitude: myLongitude }}
+            title={myTitle}
+            description={myDescription}
+          />
           {markers.map((marker, id) => (
             <Marker
               key={id}
@@ -62,21 +87,16 @@ export default function AddMarkScren({}) {
             />
           ))}
         </MapView>
-      </TouchableOpacity>
-      <View style={styles.form}>
+      </ScrollView>
+      <ScrollView style={styles.form}>
         <Text>Título:</Text>
-        <TextInput style={styles.input} value={title} onChangeText={setTitle} />
+        <TextInput style={styles.input} value={myTitle} onChangeText={setMyTitle} />
         <Text>Descrição:</Text>
-        <TextInput
-          style={styles.input}
-          value={description}
-          onChangeText={setDescription}
-          secureTextEntry={true}
-        />
+        <TextInput style={styles.input} value={myDescription} onChangeText={setMyDescription} />
         <TouchableOpacity style={styles.addButton} onPress={() => adicionar()}>
-          <Text>Adicionar</Text>
+          <Text style={styles.btnText}>Adicionar</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -85,11 +105,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
-    marginTop: Constants.statusBarHeight
+    justifyContent: 'center'
   },
   mapTouch: {
-    //height: '60%',
     width: 'auto'
   },
   map: {
@@ -97,26 +115,25 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height
   },
   form: {
-    height: 560,
+    height: 380,
     width: 'auto',
     padding: 20
   },
   input: {
     height: 40,
-    marginTop: 10,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    backgroundColor: 'white',
-    paddingLeft: 10
+    backgroundColor: 'white'
   },
   addButton: {
-    paddingLeft: '41%',
-    paddingRight: '41%',
     paddingVertical: 10,
     backgroundColor: 'green',
     borderRadius: 5,
-    marginTop: 20,
-    alignSelf: 'center'
+    alignItems: 'center'
+  },
+  btnText: {
+    color: 'white'
   }
 })

@@ -4,35 +4,38 @@ import { StyleSheet, View, Dimensions } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 
-export default function App({ navigation }) {
+export default function MapScreen({ navigation }) {
   const [markers, setMarkers] = useState([])
 
   useEffect(() => {
     async function getData() {
       const token = 'vv7oTsHdw0X9g5e7QbniP58j3iJY4h6AoOSxMIw2X8xjokSHjF'
-      const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', {
+
+      const headerOptions = {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
+      }
+
+      const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOptions)
       const markers = await response.json()
-      setMarkers(markers)
       //console.log(markers)
+      setMarkers(markers)
     }
     getData()
   }, [])
 
+  const natalRegion = {
+    latitude: -5.8,
+    longitude: -35.2,
+    latitudeDelta: 0.17912,
+    longitudeDelta: 0.179101
+  }
+
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: -5.84,
-          longitude: -35.2,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.09
-        }}
-      >
+      <MapView style={styles.map} initialRegion={natalRegion}>
         {markers.map((marker, id) => (
           <Marker
             key={id}
@@ -45,7 +48,7 @@ export default function App({ navigation }) {
       <FontAwesome5
         style={styles.plus}
         name="plus-circle"
-        size={40}
+        size={45}
         color="green"
         onPress={() => navigation.navigate('AddMarkScreen')}
       />
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   plus: {
-    marginTop: 650,
+    marginTop: 545,
     marginLeft: 300
   }
 })

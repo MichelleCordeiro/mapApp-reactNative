@@ -20,6 +20,17 @@ export default function MapScreen({ navigation }) {
   const [markers, setMarkers] = useState([])
   const token = 'vv7oTsHdw0X9g5e7QbniP58j3iJY4h6AoOSxMIw2X8xjokSHjF'
 
+  async function adicionar() {
+    const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOptions)
+    // Qdo a resposta é 200 a solicitação foi atendida c sucesso
+    // Se status for 401 não foi possivel ACESSAR API UFRN
+    if (response.status === 200) {
+      Alert.alert('Marcador inserido com sucesso.')
+    } else {
+      Alert.alert('Erro: ' + response.status)
+    }
+  }
+
   useEffect(() => {
     async function getData() {
       const headerOption = {
@@ -49,18 +60,6 @@ export default function MapScreen({ navigation }) {
       title: myTitle,
       description: myDescription
     })
-  }
-
-  async function adicionar() {
-    //const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOption)
-    const response = await fetch('https://mobile.ect.ufrn.br:3003/markers', headerOptions)
-    // Qdo a resposta é 200 a solicitação foi atendida c sucesso
-    // Se status for 401 não foi possivel ACESSAR API UFRN
-    if (response.status === 200) {
-      Alert.alert('Marcador inserido com sucesso.')
-    } else {
-      Alert.alert('Erro: ' + response.status)
-    }
   }
 
   return (

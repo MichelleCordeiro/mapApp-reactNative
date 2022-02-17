@@ -12,7 +12,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="MapScreen" component={MapScreen} options={{ title: 'Maps' }} />
+        <Stack.Screen name="MapScreen" component={MapScreen} options={{ title: 'Mapa' }} />
         <Stack.Screen
           name="AddMarkScreen"
           component={AddMarkScreen}

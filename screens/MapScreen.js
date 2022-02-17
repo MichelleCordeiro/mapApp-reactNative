@@ -29,8 +29,8 @@ export default function MapScreen({ navigation }) {
   const natalRegion = {
     latitude: -5.8,
     longitude: -35.2,
-    latitudeDelta: 0.17912,
-    longitudeDelta: 0.179101
+    latitudeDelta: 0.19912,
+    longitudeDelta: 0.199101
   }
 
   return (

@@ -4,7 +4,7 @@ App created in mobile app development class.
 
 <br>
 
-<img src="https://i.postimg.cc/0QgH1tzc/map-App-Github.png" alt="App Map" width="340" />
+<img src="https://i.postimg.cc/0QgH1tzc/map-App-Github.png" alt="App Map" width="440" />
 
 <br>
 
@@ -31,7 +31,7 @@ App created in mobile app development class.
 
 ## 🎥 Video
 
-[![Watch the video]](https://youtu.be/X1XOm6i1eJM)
+[![Watch the video](https://i.postimg.cc/YqJF3TZn/map-App-Youtube.png)](https://youtu.be/X1XOm6i1eJM)
 
 <br>
 
